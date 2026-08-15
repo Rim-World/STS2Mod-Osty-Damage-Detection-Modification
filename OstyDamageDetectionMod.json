@@ -1,0 +1,11 @@
+{
+  "id": "OstyDamageDetectionMod",
+  "name": "奥斯提受击判定修改Osty Damage Detection Modification",
+  "author": "再玩小卡组找人弄你",
+  "description": "修改奥斯提（Osty）吸收伤害时被判定为玩家掉血的逻辑：攻击被奥斯提完全吸收时，化石追踪者（Fossil Stalker）不再吸取加力，盛碗虫（石）（Bowlbug Rock）会失衡晕眩；奥斯提被击穿、玩家真实掉血时保持原行为。并非针对单个怪物进行修改，对未来采用相同逻辑的新怪物应当依然生效。",
+  "version": "1.0",
+  "has_pck": true,
+  "has_dll": true,
+  "dependencies": [],
+  "affects_gameplay": true
+}
