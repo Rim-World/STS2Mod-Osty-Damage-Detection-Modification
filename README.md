@@ -1,52 +1,112 @@
-English | [中文](README.zh.md)
+# STS2Mod：修改奥斯提受击判定（OstyDamageDetectionMod）
 
-## 1\. Environment
+修正《杀戮尖塔 2》中「奥斯提（Osty）替玩家吸收伤害时被判定为玩家掉血」的问题：宠物完全吸收攻击时，化石追踪者不再吸取加力、盛碗虫（石）正确失衡晕眩；宠物被击穿、玩家真实掉血时，两个怪物维持原版行为。
 
-This mod does not depend on any base mod. It supports Default 107 and Public Beta 111.
+A Slay the Spire 2 mod that fixes hit detection for Osty, the Necrobinder's pet: when Osty fully absorbs an attack, the Fossil Stalker no longer drains Strength and the Bowlbug (Rock) properly becomes off-balance; when Osty is overwhelmed and the player takes real damage, both monsters behave exactly as in the base game.
 
-On game startup, the mod checks whether the "Fossil Stalker drain" and "Bowlbug imbalance" mechanics exist in the current game build; if a future version changes these mechanics so that they can no longer be found, the mod will automatically skip the affected part and only log a message, without errors or crashes.
+- 当前版本：**1.0**
+- ModId：`OstyDamageDetectionMod`
+- 开源地址：<https://github.com/Rim-World/STS2Mod-Osty-Damage-Detection-Modification>
 
-In theory, as long as there are no major API updates or changes to the related mechanics, this mod should automatically adapt to new versions without any modification.
+## 功能
 
-## 2\. Language Support
+亡灵契约师的宠物奥斯提通过 `DieForYouPower` 替玩家承受未格挡伤害。部分怪物的「受击判定」把奥斯提受伤误当成玩家掉血，本 mod 纠正这一判定：
 
-This mod is a pure logic modification and contains no text content, so it involves no localization and works identically across all language versions of the game.
+- 攻击被奥斯提完全吸收（玩家未掉血）时，化石追踪者（Fossil Stalker）不再吸取加力；
+- 攻击被奥斯提完全吸收（玩家未掉血）时，盛碗虫·岩石变体（Bowlbug Rock）正确触发失衡，下回合晕眩；
+- 奥斯提被击穿、玩家真实掉血时，两个怪物保持原版行为（照常加力 / 不晕眩）；
+- 未召唤奥斯提时，两个怪物的行为与原版完全一致。
 
-## 3\. Effects
+实现上只改两个通用机制 Power（吸取判定、失衡判定），不改任何怪物类、卡牌与数值，对存档无影响，关闭 mod 即恢复原状。未来复用相同机制的新怪物会自动沿用修正后的判定；自行设计新机制的怪物需要另外适配。
 
-Modifies the logic of the Necrobinder's pet Osty absorbing damage:
+## 兼容性
 
-- When an attack is fully absorbed by Osty (the player takes no damage), the Fossil Stalker no longer gains Strength from draining;
-- When an attack is fully absorbed by Osty (the player takes no damage), the Bowlbug (Rock) correctly triggers Imbalance and is Dizzy on the following turn;
-- When Osty is overwhelmed and the player actually takes damage, both monsters keep their original behavior (the Fossil Stalker gains Strength as usual, the Bowlbug does not become Dizzy);
-- When there is no Osty (not summoned), both monsters behave exactly as in the original game.
+| 项目 | 说明 |
+|---|---|
+| 游戏版本 | default 107、public beta 111（目标方法在 107 / 110 / 111 中一致） |
+| Mod 依赖 | 无（`dependencies: []`） |
+| 玩法影响 | 有（清单 `affects_gameplay: true`） |
+| 本地化 | 无文本内容，所有语言版本的游戏表现一致 |
 
-This mod works by modifying two in-game mechanics (the drain check and the imbalance check). New monsters that use the same logic in the future will automatically inherit the corrected checks, but monsters designed with brand-new mechanics will require additional adaptation.
+游戏启动时会检测两个目标机制是否存在；未来版本若改动了相关机制导致找不到，mod 自动跳过对应部分并只记录日志，不报错、不崩溃，因此清单不设 `min_game_version`。
 
-This mod does not modify any monster, card, or number, has no effect on saves, and reverts immediately when the mod is disabled.
+不保证与盗版、修改版、移动版、老旧版本或冷门 mod、次级 mod 的兼容性。
 
-## 4\. Impact (based on my understanding of the game)
+## 安装
 
-Slightly boosts the overall strength of the Necrobinder, with almost no impact on game balance.
+1. 解压发布包，得到 `OstyDamageDetectionMod` 文件夹，内含 `OstyDamageDetectionMod.dll`、`OstyDamageDetectionMod.pdb`、`OstyDamageDetectionMod.json`、`OstyDamageDetectionMod.pck`。
+2. 把整个文件夹放进游戏目录的 `mods\` 下：
+   `C:\Game\Steam\steamapps\common\Slay the Spire 2\mods\OstyDamageDetectionMod\`（其他平台对应各自的游戏安装目录）。
+3. 启动游戏，mod 列表中出现「奥斯提受击判定修改」并显示图标即为生效。
+4. 日志确认：`%APPDATA%\Godot\app_userdata\sts2\logs\godot*.log` 中出现 `OstyDamageDetectionMod: applied 2/2 patches`。
 
-Specifically, in single-player A10 SL (save & load) runs, the Necrobinder still ranks 4th or 5th among the five classes;
+## 构建
 
-It remains far behind the 3rd-ranked Regent, and extremely far behind the top two, the Ironclad and the Silent.
+需要 .NET SDK（`net9.0`）与 Godot .NET 版 4.5.1，并已安装《杀戮尖塔 2》。
 
-## 5\. Compatibility and Bugs
+```powershell
+cd 9.SRC\OstyDamageDetectionMod
+.\build.ps1
+```
 
-This mod is written with minimal dependencies and should normally be compatible with most mods, and is unlikely to break with new Beta updates.
+脚本依次执行：
 
-However, this mod does not guarantee compatibility with pirated, modified, mobile, old versions, or niche and secondary mods.
+1. `dotnet build`：产物输出到 `.godot\mono\temp\bin\Debug\`；
+2. `Godot --headless --import`：生成 `.import` / `.ctex` 资源元数据；
+3. `Godot --headless --export-pack "Windows Desktop"`：生成 `OstyDamageDetectionMod.pck`（仅含 mod 列表图标）；
+4. 把 dll / pdb / json 拷贝到游戏 `mods\OstyDamageDetectionMod`。
 
-## 6\. Credits
+工程引用的 `sts2.dll`、`0Harmony.dll` 从游戏 `data_sts2_windows_x86_64\` 读取，`build.ps1` 中的游戏目录与 Godot 路径为本机绝对路径，换机器需修改。
 
-This mod was made with Opencode (desktop) + DeepSeek V4 Flash (0731, GA). Thanks to Saint Liang.
+## 目录结构
 
-Thanks to the Slay the Spire 2 dev team for their efforts in making modding easier for players.
+```
+STS2Mod-修改奥斯提受击判定/
+├── AGENTS.md              # 工作区规则
+├── README.md              # 本文件
+├── CHANGELOG.md           # 单文件更新日志（Keep a Changelog）
+├── LICENSE                # MIT
+├── .gitignore
+├── 1.ADR/                 # 决策记录，ADR.md 为索引
+├── 2.PLANS/               # 施工计划，PLANS.md 为索引
+├── 3.DOCS/                # 知识与报告，DOCS.md 为索引
+├── 4.SDD/                 # 软件设计文档，SDD.md 为索引
+├── 5.ChangeLog/           # 分版本日志，ChangeLog.md 为索引
+├── 9.SRC/                 # 源码（OstyDamageDetectionMod/，含其工程 README）
+├── 10.OUTPUT/             # 构建产物与发布包，output.md 为索引
+├── PRIVACY/               # 机密信息位，PRIVACY.md 为索引
+├── TMP/                   # 临时与过程文件，TMP.md 为索引
+├── TOOLS/                 # 工具与自写脚本，TOOLS.md 为索引
+├── description/           # 创意工坊文案（中英）
+└── pics/                  # 封面与配图
+```
 
-## 7\. Open Source and Contact
+## 文档索引
 
-Open source repository: https://github.com/Rim-World/STS2Mod-Osty-Damage-Detection-Modification
+| 目录 | 索引 | 内容 |
+|---|---|---|
+| `1.ADR/` | [ADR.md](1.ADR/ADR.md) | 路线选型、构建与安装、图标与 pck 打包三项决策 |
+| `2.PLANS/` | [PLANS.md](2.PLANS/PLANS.md) | 总的修复计划与施工记录 |
+| `3.DOCS/` | [DOCS.md](3.DOCS/DOCS.md) | 奥斯提受击判定机制的调研笔记 |
+| `4.SDD/` | [SDD.md](4.SDD/SDD.md) | 总体设计（模块划分、补丁策略、数据流、异常与兼容设计） |
+| `5.ChangeLog/` | [ChangeLog.md](5.ChangeLog/ChangeLog.md) | 1.0 的完整版本记录 |
+| `10.OUTPUT/` | [output.md](10.OUTPUT/output.md) | 本地构建产物与发布包登记 |
 
-Feel free to leave your comments and feedback in the comment section.
+面向玩家的说明文档在 `description/`（中文、英文各一份），源码内另有一份英文 / 中文 README：`9.SRC/OstyDamageDetectionMod/README.md` 与 `README.zh.md`。
+
+## 版本
+
+当前版本 **1.0**（2026-08-15 构建安装）。版本沿革见 [CHANGELOG.md](CHANGELOG.md)。
+
+已知问题：实机验证项（启动日志补丁计数、mod 列表图标、场景 A / B、无奥斯提回归）尚未全部完成。
+
+## 致谢
+
+- 本 mod 使用 opencode（桌面版）+ DeepSeek V4 Flash（0731，GA）完成，感谢梁圣。
+- 感谢《杀戮尖塔 2》制作组为方便玩家制作 mod 所做的努力。
+
+## 开源
+
+MIT 许可，见 [LICENSE](LICENSE)。
+
+仓库地址：<https://github.com/Rim-World/STS2Mod-Osty-Damage-Detection-Modification>

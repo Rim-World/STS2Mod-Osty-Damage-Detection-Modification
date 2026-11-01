@@ -1,16 +1,52 @@
-# Godot 4+ specific ignores
+# ── 构建产物（.NET / Godot C#）──
+bin/
+obj/
+*.dll
+*.pck
+*.pdb
+*.user
+*.suo
+
+# ── Godot 4 ──
 .godot/
+.import/
+export.cfg
+export_credentials.cfg
+*.translation
+*.tmp
+.mono/
+data_*/
+mono_crash.*.json
 .nomedia
 
+# ── 本地运行环境（不入库）──
+10.OUTPUT/*
+!10.OUTPUT/output.md
+TMP/*
+!TMP/TMP.md
+PRIVACY/
+
+# ── 发布包 / 压缩件 ──
+*.zip
+*.7z
+
+# ── 系统与编辑器 ──
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+
+# ── 原仓库 Godot 模板 .gitignore 规则（并入）──
+# Godot 4+ specific ignores
+.nomedia
 # Godot-specific ignores
 .import/
 export.cfg
 export_credentials.cfg
 *.tmp
-
 # Imported translations (automatically generated from CSV files)
 *.translation
-
 # Mono-specific ignores
 .mono/
 data_*/
