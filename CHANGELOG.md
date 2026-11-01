@@ -13,6 +13,7 @@
 ### 说明
 
 - 本次整理只移动与重命名文件、补写文档，未改动任何 `.cs` / `.csproj` / `project.godot` / `export_presets.cfg` / `build.ps1` / mod 清单内容，构建产物与行为不变。
+- 提交编号：`5c33389`（chore(repo): 整理为 AGENTS 十目录结构并补全文档）。
 
 ## [1.0] - 2026-08-15
 
